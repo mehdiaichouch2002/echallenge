@@ -1,0 +1,138 @@
+@startuml entites
+!pragma layout smetana
+title Diagramme de classes UML — Entités du domaine
+
+skinparam backgroundColor white
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BackgroundColor #EFF6FF
+  HeaderBackgroundColor #DBEAFE
+  BorderColor #1E40AF
+  ArrowColor #475569
+  FontName Helvetica
+}
+skinparam enum {
+  BackgroundColor #FEF9C3
+  HeaderBackgroundColor #FEF08A
+  BorderColor #CA8A04
+}
+hide circle
+
+class User {
+  - id : Long
+  - email : String
+  - passwordHash : String
+  - role : Role
+}
+
+enum Role <<enumeration>> {
+  ADMIN
+  CANDIDATE
+}
+
+class Candidate {
+  - firstName : String
+  - lastName : String
+  - school : String
+  - field : String
+  - gsm : String
+  - code : String
+  - confirmed : boolean
+}
+
+class Theme {
+  - id : Long
+  - name : String
+  - description : String
+}
+
+class QuestionType {
+  - id : Long
+  - name : String
+  - type : Type
+}
+
+class Question {
+  - id : Long
+  - questionText : String
+  - explanation : String
+  - points : Integer
+  - active : boolean
+}
+
+class QuestionOption {
+  - id : Long
+  - optionText : String
+  - correct : boolean
+  - displayOrder : int
+}
+
+class Test {
+  - id : Long
+  - name : String
+  - description : String
+  - totalDurationMinutes : int
+  - questionDurationSeconds : int
+  - totalQuestions : int
+  - themeQuestionCounts : Map<Long, Integer>
+}
+
+class TimeSlot {
+  - id : Long
+  - startTime : LocalDateTime
+  - endTime : LocalDateTime
+  - durationMinutes : int
+  - booked : boolean
+}
+
+class TestSession {
+  - id : Long
+  - sessionCode : String
+  - status : SessionStatus
+  - registrationDate : LocalDateTime
+  - startTime : LocalDateTime
+  - endTime : LocalDateTime
+}
+
+enum SessionStatus <<enumeration>> {
+  NOT_STARTED
+  STARTED
+  COMPLETED
+  EXPIRED
+  CANCELLED
+}
+
+class CandidateAnswer {
+  - id : Long
+  - correct : boolean
+  - timeSpentSeconds : long
+}
+
+class Result {
+  - id : Long
+  - totalQuestions : int
+  - correctAnswers : int
+  - score : double
+  - passed : boolean
+  - completionTime : LocalDateTime
+}
+
+Candidate --|> User
+User ..> Role
+TestSession ..> SessionStatus
+
+Question "*" --> "1" Theme : thème
+Question "*" --> "1" QuestionType : type
+Question "1" *-- "*" QuestionOption : options
+
+TestSession "*" --> "1" Candidate : candidat
+TestSession "*" --> "1" Test : test
+TestSession "*" --> "1" TimeSlot : créneau
+
+CandidateAnswer "*" --> "1" TestSession : session
+CandidateAnswer "*" --> "1" Question : question
+CandidateAnswer "*" --> "0..1" QuestionOption : réponse choisie
+
+Result "1" --> "1" TestSession : session
+@enduml
