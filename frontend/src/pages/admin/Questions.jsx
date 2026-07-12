@@ -79,9 +79,9 @@ export default function Questions() {
       points: q.points,
     })
     setOptions(q.options.length ? q.options.map((o) => ({
-      optionText: o.optionText, correct: o.correct, displayOrder: o.displayOrder,
+      id: o.id, optionText: o.optionText, correct: o.correct, displayOrder: o.displayOrder,
     })) : [emptyOption(), emptyOption()])
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const remove = async (id) => {
@@ -105,8 +105,8 @@ export default function Questions() {
       </div>
       {error && <Alert onClose={() => setError(null)}>{error}</Alert>}
 
-      <div className="card">
-        <h3>{editing ? 'Modifier la question' : 'Nouvelle question'}</h3>
+      <div className={editing ? 'card card-editing' : 'card'}>
+        <h3>{editing ? `Modifier la question n°${editing}` : 'Nouvelle question'}</h3>
         <form className="stack" onSubmit={submit}>
           <div className="form-row">
             <div>

@@ -34,6 +34,7 @@ export default function Themes() {
   const edit = (theme) => {
     setEditing(theme.id)
     setForm({ name: theme.name, description: theme.description || '' })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const remove = async (id) => {
@@ -50,8 +51,8 @@ export default function Themes() {
     <>
       <div className="page-head"><h2>Gestion des thèmes</h2></div>
       {error && <Alert onClose={() => setError(null)}>{error}</Alert>}
-      <div className="card">
-        <h3>{editing ? 'Modifier le thème' : 'Nouveau thème'}</h3>
+      <div className={editing ? 'card card-editing' : 'card'}>
+        <h3>{editing ? `Modifier le thème « ${form.name} »` : 'Nouveau thème'}</h3>
         <form className="stack" onSubmit={submit}>
           <div className="form-row">
             <div>

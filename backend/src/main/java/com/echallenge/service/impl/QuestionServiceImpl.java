@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -65,13 +67,30 @@ public class QuestionServiceImpl implements QuestionService {
         existing.setExplanation(question.getExplanation());
         existing.setPoints(question.getPoints());
         existing.setActive(question.isActive());
-        existing.getOptions().clear();
+        // Met à jour les options en place (par id) pour préserver celles déjà
+        // référencées par des réponses de candidats ; supprimer/recréer violerait
+        // la contrainte référentielle de candidate_answers.
+        Map<Long, com.echallenge.entity.QuestionOption> current = new HashMap<>();
+        existing.getOptions().forEach(o -> current.put(o.getId(), o));
+        List<com.echallenge.entity.QuestionOption> merged = new ArrayList<>();
         if (question.getOptions() != null) {
-            question.getOptions().forEach(o -> {
-                o.setQuestion(existing);
-                existing.getOptions().add(o);
-            });
+            for (com.echallenge.entity.QuestionOption incoming : question.getOptions()) {
+                com.echallenge.entity.QuestionOption target =
+                        incoming.getId() != null ? current.get(incoming.getId()) : null;
+                if (target != null) {
+                    target.setOptionText(incoming.getOptionText());
+                    target.setCorrect(incoming.isCorrect());
+                    target.setDisplayOrder(incoming.getDisplayOrder());
+                    merged.add(target);
+                } else {
+                    incoming.setId(null);
+                    incoming.setQuestion(existing);
+                    merged.add(incoming);
+                }
+            }
         }
+        existing.getOptions().clear();
+        existing.getOptions().addAll(merged);
         return questionRepository.save(existing);
     }
 

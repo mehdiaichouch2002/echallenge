@@ -53,7 +53,7 @@ export default function Tests() {
       active: t.active,
     })
     setCounts(t.themeQuestionCounts || {})
-    window.scrollTo(0, 0)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const remove = async (id) => {
@@ -71,8 +71,8 @@ export default function Tests() {
       <div className="page-head"><h2>Gestion des tests</h2></div>
       {error && <Alert onClose={() => setError(null)}>{error}</Alert>}
 
-      <div className="card">
-        <h3>{editing ? 'Modifier le test' : 'Nouveau test'}</h3>
+      <div className={editing ? 'card card-editing' : 'card'}>
+        <h3>{editing ? `Modifier le test « ${form.name} »` : 'Nouveau test'}</h3>
         <form className="stack" onSubmit={submit}>
           <div className="form-row">
             <div>

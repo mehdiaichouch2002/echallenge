@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, String>> conflict(DataIntegrityViolationException e) {
         return error(HttpStatus.CONFLICT,
-                "Suppression impossible : cet élément est référencé par d'autres données (sessions, questions ou résultats)");
+                "Opération impossible : ces données sont référencées par d'autres enregistrements (réponses, sessions ou résultats)");
     }
 
     @ExceptionHandler(BadCredentialsException.class)
