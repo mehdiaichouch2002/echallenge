@@ -22,6 +22,7 @@ Sécurité transversale : Spring Security 6 + JWT (stateless) + BCrypt
 - **Frontend** : React 19 + Vite + react-router + axios — dossier [`frontend/`](frontend/)
 - **Base de données** : MySQL 8 via `docker-compose.yml` — script SQL dans [`database/echallenge.sql`](database/echallenge.sql)
 - **Documentation** : diagrammes, rapport et présentation dans [`docs/`](docs/)
+- **Démonstration vidéo** : parcours complet (CRUD admin, inscription, examen, résultats) dans [`docs/demo/Demo_EChallenge.mp4`](docs/demo/Demo_EChallenge.mp4) (1 min 23)
 
 ## Prérequis
 
